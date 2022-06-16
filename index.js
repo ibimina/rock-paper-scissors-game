@@ -105,7 +105,7 @@ const playPaper = (item) => {
       add();
       choose.innerHTML = `
                             <div class="set">
-                                    <i class="fas fa-hand icon paper"></i>  
+                                    <i class="fas fa-hand icon two"></i>  
                                     <p>You played ${item}</p>
                             </div> 
                             <aside><p>You Win 🥳</p></aside> 
