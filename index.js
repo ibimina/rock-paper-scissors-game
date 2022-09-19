@@ -3,97 +3,71 @@ const humanScore = document.querySelector(".human");
 const computerScore = document.querySelector(".computer");
 const choose = document.querySelector(".choose");
 
-
 // Game rule
 
 // Rock beats scissors, scissors beats paper, and paper beats rock.
 
-//function for rock button
 
-const show = document.querySelector(".show");
+// const show = document.querySelector(".show");
 
-const add = () => {
-  ++humanScore.textContent;
-
-  let human = humanScore.textContent;
-  localStorage.setItem("human", human);
+const add = (score) => {
+  if (score.className === "human") {
+    ++score.textContent;
+    let human = score.textContent;
+    localStorage.setItem("human", human);
+  } else if (score.className === "computer") {
+    ++score.textContent;
+    let comp = computerScore.textContent;
+    localStorage.setItem("comp", comp);
+  }
 };
 
-const addTwo = () => {
-  ++computerScore.textContent;
-
-  let comp = computerScore.textContent;
-  localStorage.setItem("comp", comp);
-};
-
-// if (localStorage.getItem("human") && localStorage.getItem("comp")) {
-//   humanScore.textContent = localStorage.getItem("human");
-//    computerScore.textContent = localStorage.getItem("comp");
-// }
-//store data in local storage
-// localStorage.setItem("name","mina")
-// localStorage.setItem("class","one");
-
-// //get data from local storage
-// localStorage.getItem("name")
-
-// //updata data
-// localStorage.setItem("name", "min");
-// localStorage.class="two";
-
-// //remove
-// localStorage.clear()
-// localStorage.removeItem("name");
-
-const playRock = (item) => {
-  let computer = randomItem();
-
-  if (item === "rock") {
-    if (computer === "rock") {
-      console.log("there is a tie");
-      choose.innerHTML = `<div calss="set">
-                           <i class="fas fa-hand-fist icon one"></i>
+const result = (rockIcon, item, resulttext, rockIconO, computer) => {
+  choose.innerHTML = `<div class="set">
+                           <i class="${rockIcon}"></i>
                             <p>You played ${item}</p>
                           </div> 
-                            <aside><p>It's a Draw 🙃</p></aside> 
+                            <aside><p>${resulttext}</p></aside> 
                          <div class="tie"> 
-                            <i class="fas fa-hand-fist icon one"></i>
+                            <i class="${rockIconO}"></i>
                             <p>Bot played ${computer}</p>  
                          </div>  
                          <button class="again">play again</button>
             `;
-    } else if (computer === "scissors") {
-      console.log("player win");
-      add();
-      choose.innerHTML = `<div class="set">
-                            <i class="fas fa-hand-fist icon one"></i>
-                                
-                            <p>You played ${item}</p>
-                        </div>
-                        <aside><p>You Win 🥳</p></aside>
-                        <div class="tie">
-                            <i class="fas fa-hand-scissors icon three"></i>
-                            <p>Bot played ${computer}</p> 
-                         </div>    
-                         <button class="again">play again</button>
-            `;
-    } else if (computer === "paper") {
-      console.log("computer win");
-      addTwo();
-      choose.innerHTML = `<div class="set">
-                                <i class="fas fa-hand-fist icon one"></i>
-                                    
-                                <p>You played ${item}</p>
-                         </div> 
-                          <aside><p>You lose 😞</p></aside>
-                        <div class="tie">
-                            <i class="fas fa-hand icon  two"></i>
-                            <p>Bot played ${computer}</p>
-                        </div>     
-                            <button class="again">play again</button>
-            `;
-    }
+};
+const data = {
+  rockIcon: "fas fa-hand-fist icon one",
+  paperIcon: "fas fa-hand icon two",
+  sicssorIcon: "fas fa-hand-scissors icon three",
+  rockIconO: "fas fa-hand-fist icon one",
+  paperIconO: "fas fa-hand icon two",
+  sicssorIconO: "fas fa-hand-scissors icon three",
+  win: "You Win 🥳",
+  draw: "It's a Draw 🙃",
+  lose: "You lose 😞",
+};
+
+//function for rock button
+const playRock = (item) => {
+  let computer = randomItem();
+
+  if (item === computer) {
+    console.log("there is a tie");
+
+    result(data.rockIcon, item, data.draw, data.rockIconO, computer);
+  } else if (item === "rock" && computer === "scissors") {
+    console.log("player win");
+    add(humanScore);
+
+    result(data.rockIcon, item, win, data.sicssorIcon, computer);
+  } else if (item === "rock" && computer === "paper") {
+    console.log("computer win");
+
+    add(computerScore);
+
+    result(data.rockIcon, item, data.lose, data.paperIcon, computer);
   }
+  // }
 };
 
 //function for paper button
@@ -102,46 +76,18 @@ const playPaper = (item) => {
   if (item === "paper") {
     if (computer === "rock") {
       console.log("player wins");
-      add();
-      choose.innerHTML = `
-                            <div class="set">
-                                    <i class="fas fa-hand icon two"></i>  
-                                    <p>You played ${item}</p>
-                            </div> 
-                            <aside><p>You Win 🥳</p></aside> 
-                            <div class="tie">
-                                    <i class="fas fa-hand-fist icon one"></i>
-                                    <p>Bot played ${computer}</p> 
-                                </div>    
-                            <button class="again">Play again</button>
-            `;
+      add(humanScore);
+
+      result(data.paperIcon, item, data.win, data.rockIcon, computer);
     } else if (computer === "scissors") {
       console.log("computer wins");
-      addTwo();
-      choose.innerHTML = `<div class="set">
-                            <i class="fas fa-hand icon two"></i>
-                            <p>You played ${item}</p>
-                        </div>
-                         <aside><p>You lose 😞 </p></aside>
-                        <div class="tie">     
-                             <i class="fas fa-hand-scissors icon three"></i>
-                            <p>Bot played ${computer}</p>
-                        </div>    
-                             <button class="again">Play again</button>
-            `;
+      add(computerScore);
+
+      result(paperIcon, item, lose, sicssorIcon, computer);
     } else if (computer === "paper") {
       console.log("there is a tie");
-      choose.innerHTML = `<div class="set">
-      <i class="fas fa-hand icon two"></i>
-       <p>You played ${item}</p>
-       </div>
-       <aside><p>It's a Draw 🙃</p></aside> 
-       <div class="tie">    
-      <i class="fas fa-hand icon two"></i>
-        <p>Bot played ${computer}</p>    
-        </div> 
-         <button class="again">Play again</button>
-            `;
+
+      result(data.paperIcon, item, data.draw, data.paperIconO, computer);
     }
   }
 };
@@ -152,63 +98,21 @@ const playScissor = (item) => {
 
   if (item === "scissor") {
     if (computer === "rock") {
-      console.log("computer wins");
-
-      addTwo();
-      choose.innerHTML = `<div class="set">
-                            <i class="fas fa-hand-scissors icon three"></i>
-                            <p>You played ${item}</p>
-                         </div> 
-                         <aside><p>You lose 😞</p></aside> 
-                         <div class="tie">  
-                          <i class="fas fa-hand-fist icon one"></i>
-                            <p>Bot played ${computer}</p>
-                        </div>   
-                         <button class="again">Play again</button>
-            `;
+      add(computerScore);
+      result(data.sicssorIcon, item, data.lose, data.rockIcon, computer);
     } else if (computer === "scissors") {
-      console.log("there is a tie");
-      choose.innerHTML = `<div class="set">
-                            <i class="fas fa-hand-scissors icon three"></i>
-                            <p>You played ${item}</p> 
-                        </div> 
-                        <aside><p>It's a Draw 🙃</p></aside>   
-                        <div class="tie">  
-                            <i class="fas fa-hand-scissors icon three"></i>
-                            <p>Bot played ${computer}</p>
-                        </div> 
-                        <button class="again">Play again</button>
-            `;
+      result(data.sicssorIcon, item, draw, data.sicssorIconO, computer);
     } else if (computer === "paper") {
-      console.log("player wins");
-      //   humanScore.textContent = Number(humanScore.textContent) + 1;
-      add();
-      choose.innerHTML = `<div class="set">
-                            <i class="fas fa-hand-scissors icon three"></i>
-                            <p>You played ${item}</p>
-                         </div> 
-                         <aside><p>You Win 🥳</p></aside>  
-                         <div class="tie">
-                            <i class="fas fa-hand icon two"></i>
-                            <p>Bot played ${computer}</p> 
-                          </div>
-                          <button class="again">Play again</button>
-            `;
+      add(humanScore);
+      result(data.sicssorIcon, item, data.win, data.paperIcon, computer);
     }
   }
 };
 
 // Create a function that returns a random item from the array for computer player
 const randomItem = () => {
-  let num = Math.random() * 2;
-  // console.log(num)
-
-  let selectItem = num.toFixed(0);
-  // console.log(selectItem)
-
-  let pick = hands[selectItem];
-  // console.log(pick)
-  return pick;
+  let num = Math.floor(Math.random() * 3);
+  return hands[num];
 };
 
 //function to continue playing
@@ -220,42 +124,19 @@ const playAgain = () => {
        `;
 };
 
-// callback function for rock button
-function rock(params) {
-  //   playGame(hands[0]);
-  playRock(hands[0]);
-}
-
-// callback function for scissors button
-function sicssors(params) {
-  //   playGame(hands[2]);
-  playScissor(hands[2]);
-}
-
-//callback function for paper
-function paper(params) {
-  //   playGame(hands[1]);
-  playPaper(hands[1]);
-}
-
 //event delegation
 choose.addEventListener("click", (e) => {
   let tar = e.target;
   console.log(tar);
   if (tar.className.includes("three")) {
-    console.log("a");
-    sicssors();
+    playScissor(hands[2]);
   } else if (tar.className.includes("one")) {
-    console.log("b");
-    rock();
+    playRock(hands[0]);
   } else if (tar.className.includes("two")) {
-    console.log("c");
-    paper();
+    playPaper(hands[1]);
   } else if (tar.className.includes("again")) {
-    console.log("d");
     playAgain();
   }
-
 });
 
 if (localStorage.getItem("human") && localStorage.getItem("comp")) {
@@ -272,97 +153,3 @@ const cls = () => {
 
 const cle = document.querySelector(".clear");
 cle.addEventListener("click", cls);
-
-// rockBtn.addEventListener("click", rock);
-
-// paperBtn.addEventListener("click", paper);
-
-// scissorBtn.addEventListener("click", sicssors);
-
-// function that direct the whole game broken into smaller functions playRock,PlayPaper,playScissors
-
-// const playGame = (item) => {
-//   let computer = randomItem();
-
-//   if (item === "rock") {
-//     if (computer === "rock") {
-//       console.log("there is a tie");
-//       choose.innerHTML = `<div calss="set">
-//       <i class="fas fa-hand-fist icon"></i>
-//          <p>you played ${item}</p> </div>  <div class="tie"> <i class="fas fa-hand-fist icon"></i>
-//          <p>computer played ${computer}</p>  </div>   <button class="again">play again</button>
-//             `;
-//     } else if (computer === "scissors") {
-//       console.log("player win");
-//       add();
-//       choose.innerHTML = `<div class="set">
-//       <i class="fas fa-hand-fist icon "></i>
-
-//        <p>you played ${item}</p></div> <div class="tie"><i class="fas fa-hand-scissors icon "></i>
-//         <p>computer played ${computer}</p>  </div>    <button class="again">play again</button>
-//             `;
-//     } else if (computer === "paper") {
-//       console.log("computer win");
-//       addTwo();
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand-fist icon "></i>
-
-//        <p>you played ${item}</p> </div> <div class="tie"><i class="fas fa-hand icon "></i>
-//          <p>computer played ${computer}</p></div>     <button class="again">play again</button>
-//             `;
-//     }
-//   } else if (item === "paper") {
-//     if (computer === "rock") {
-//       console.log("player wins");
-//       add();
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand icon"></i>
-
-//        <p>you played ${item}</p></div> <div class="tie">
-//        <i class="fas fa-hand-fist icon "></i>
-//          <p>computer played ${computer}</p> </div>    <button class="again">play again</button>
-//             `;
-//     } else if (computer === "scissors") {
-//       console.log("computer wins");
-//       addTwo();
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand icon "></i>
-//        <p>you played ${item}</p></div> <div class="tie">
-//       <i class="fas fa-hand-scissors icon"></i>
-//          <p>computer played ${computer}</p></div>     <button class="again">play again</button>
-//             `;
-//     } else if (computer === "paper") {
-//       console.log("there is a tie");
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand icon"></i>
-//        <p>you played ${item}</p></div> <div class="tie">
-//       <i class="fas fa-hand icon "></i>
-//         <p>computer played ${computer}</p>    </div>  <button class="again">play again</button>
-//             `;
-//     }
-//   } else if (item === "scissor") {
-//     if (computer === "rock") {
-//       console.log("computer wins");
-
-//       addTwo();
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand-scissors icon"></i>
-//        <p>you played ${item}</p></div>   <div class="tie">
-//       <i class="fas fa-hand-fist icon "></i>
-//           <p>computer played ${computer}</p> </div>   <button class="again">play again</button>
-//             `;
-//     } else if (computer === "scissors") {
-//       console.log("there is a tie");
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand-scissors icon "></i>
-//        <p>you played ${item}</p> </div>   <div class="tie">
-//       <i class="fas fa-hand-scissors icon "></i>
-//             <p>computer played ${computer}</p> </div> <button class="again">play again</button>
-//             `;
-//     } else if (computer === "paper") {
-//       console.log("player wins");
-//       //   humanScore.textContent = Number(humanScore.textContent) + 1;
-//       add();
-//       choose.innerHTML = `<div class="set"><i class="fas fa-hand-scissors icon "></i>
-//       <p>you played ${item}</p></div><div class="tie">
-//             <i class="fas fa-hand icon"></i>
-//            <p>computer played ${computer}</p> </div>
-//             <button class="again">play again</button>
-//             `;
-//     }
-//   }
-// };
